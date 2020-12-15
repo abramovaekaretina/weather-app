@@ -9,13 +9,13 @@ import UIKit
 import CoreLocation
 
 class ViewController: UIViewController {
-    
+
     @IBOutlet weak var cityPickerView: UIPickerView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var getWeatherForecastButton: UIButton!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var blurEffectView: UIVisualEffectView!
-    
+
     private let startUrl = "https://api.weatherbit.io/v2.0/forecast/daily?city="
     private let apiKey = "&key=46bd1a25044d4418bfe508574356cc63"
     private var countOfDays = 3
@@ -24,22 +24,24 @@ class ViewController: UIViewController {
     private var forecasts: ForecastDaily?
     private let locationManager = CLLocationManager()
     private var currentLocation = CLLocation()
-    
-    private var cities: [String] = ["Current location", "Vienna", "Brussels", "Minsk", "London", "Berlin", "Copenhagen", "Madrid", "Rome", "Riga", "Monaco", "Amsterdam", "Oslo", "Warsaw", "Moscow", "Kiev", "Helsinki", "Paris", "Prague", "Bern", "Stockholm", "Tallinn"]
-    
+    private var cities: [String] = [
+        "Current location", "Vienna", "Brussels",
+        "Minsk", "London", "Berlin", "Copenhagen",
+        "Madrid", "Rome", "Riga", "Monaco",
+        "Amsterdam", "Oslo", "Warsaw", "Moscow",
+        "Kiev", "Helsinki", "Paris", "Prague",
+        "Bern", "Stockholm", "Tallinn"
+    ]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         blurEffectView.alpha = 0.7
-        
         cityPickerView.delegate = self
         cityPickerView.dataSource = self
-        
         tableView.layer.cornerRadius = 15
         tableView.delegate = self
         tableView.dataSource = self
-        
         getWeatherForecastButton.layer.cornerRadius = 15
-        
         locationManager.requestWhenInUseAuthorization()
         locationManager.delegate = self
         currentLocation = locationManager.location ?? CLLocation()
@@ -67,7 +69,7 @@ class ViewController: UIViewController {
         }))
         present(alert, animated: true)
     }
-    
+
     func getForecast() {
         print("count - \(countOfDays)")
         if cityPickerView.selectedRow(inComponent: 0) != 0 {
@@ -76,44 +78,35 @@ class ViewController: UIViewController {
         } else if cityPickerView.selectedRow(inComponent: 0) == 0 {
             let lat = currentLocation.coordinate.latitude
             let lon = currentLocation.coordinate.longitude
-            apiURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(lat)&lon=\(lon)&key=46bd1a25044d4418bfe508574356cc63&days=\(countOfDays)"
+            apiURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(lat)&lon=\(lon)" +
+                apiKey + "&days=\(countOfDays)"
         }
         print(apiURL)
         sendRequest()
     }
-    
+
     func sendRequest() {
         if let url = URL(string: apiURL) {
                 let urlRequest = URLRequest(url: url)
-                let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+                let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, _, error) in
                     guard error == nil else {
-                        print(error?.localizedDescription)
+                        print(error?.localizedDescription ?? "Error not found")
                         return
                     }
-                    
                     if let data = data {
                         if let forecastResponse = try? JSONDecoder().decode(ForecastDaily.self, from: data) {
                             self.forecasts = forecastResponse
                             DispatchQueue.main.async {
-//                                print(self.forecasts?.city)
-//                                print(self.forecasts?.data.first?.date)
-//                                print(self.forecasts?.data.first?.temperature)
-//                                print(self.forecasts?.data.first?.weather.description)
                                 self.tableView.reloadData()
                             }
-                            
                         } else {
                             print("dgfbhjk")
                         }
-                        
                     }
-                    
                 }
-            
             dataTask.resume()
         }
     }
-    
 }
 
 extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
@@ -128,7 +121,7 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return "\(cities[row])"
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         getForecast()
     }
@@ -142,29 +135,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ForecastTableViewCell.self ), for: indexPath) as? ForecastTableViewCell else {
+        let nameCell = String(describing: ForecastTableViewCell.self)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: nameCell,
+                                                       for: indexPath) as? ForecastTableViewCell else {
             return UITableViewCell()
         }
-        
         if let forecasts = forecasts {
             DispatchQueue.main.async {
                 cell.descriptionLabel.text = forecasts.data[indexPath.row].weather.description
-                let weather = forecasts.data[indexPath.row].weather.description
-                if weather.contains("rain") {
-                    cell.weatherImageView.image = UIImage(named: "rain")
-//                    UIImage(data:)
-                } else if weather.contains("clouds") {
-                    cell.weatherImageView.image = UIImage(named: "cloud")
-                } else if weather.contains("clear") {
-                    cell.weatherImageView.image = UIImage(named: "sunny")
-                }
-                
+                let imageName = forecasts.data[indexPath.row].weather.icon
+                cell.weatherImageView.image = UIImage(named: imageName)
                 let degrees = forecasts.data[indexPath.row].temperature
                 cell.degreesLabel.text = "\(String(degrees))°C"
-
                 let dateFormetter = DateFormatter()
                 dateFormetter.dateFormat = "yyyy-MM-dd"
                 let string = forecasts.data[indexPath.row].date
@@ -174,15 +158,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         }
-        
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
-    
-    
 }
 
 extension ViewController: CLLocationManagerDelegate {

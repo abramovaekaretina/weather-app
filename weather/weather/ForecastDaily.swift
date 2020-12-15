@@ -12,7 +12,6 @@ class ForecastDaily: Codable {
     let city: String
 //    let lon: String
 //    let lat: String
-    
     enum CodingKeys: String, CodingKey {
         case data
         case city = "city_name"
@@ -23,7 +22,6 @@ class Day: Codable {
     let date: String
     let temperature: Double
     let weather: Weather
-    
     enum CodingKeys: String, CodingKey {
         case date = "datetime"
         case temperature = "temp"
