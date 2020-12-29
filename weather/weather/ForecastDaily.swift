@@ -10,8 +10,6 @@ import Foundation
 class ForecastDaily: Codable {
     let data: [Day]
     let city: String
-//    let lon: String
-//    let lat: String
     enum CodingKeys: String, CodingKey {
         case data
         case city = "city_name"

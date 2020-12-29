@@ -40,26 +40,26 @@
                                     <action selector="getWeatherForecastButtonPressed:" destination="TpV-ea-eJk" eventType="touchUpInside" id="MLZ-0d-SWU"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1pi-Eg-xud">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1pi-Eg-xud">
                                 <rect key="frame" x="10" y="223" width="394" height="566"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="ForecastTableViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ForecastTableViewCell" id="PE9-n9-Tvt" customClass="ForecastTableViewCell" customModule="weather" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="394" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="394" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PE9-n9-Tvt" id="Rwx-S5-RjX">
-                                            <rect key="frame" x="0.0" y="0.0" width="394" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="394" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3lJ-aA-Xjj">
-                                                    <rect key="frame" x="20" y="11.5" width="36" height="21"/>
+                                                    <rect key="frame" x="20" y="11.5" width="36" height="20.5"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Degrees" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ban-pu-jEu">
-                                                    <rect key="frame" x="314" y="11.5" width="60" height="21"/>
+                                                    <rect key="frame" x="314" y="11.5" width="60" height="20.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="60" id="Qdm-1L-afp"/>
                                                     </constraints>
@@ -68,13 +68,13 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5yO-yE-U1N">
-                                                    <rect key="frame" x="282" y="11" width="22" height="22"/>
+                                                    <rect key="frame" x="282.5" y="11" width="21.5" height="21.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="5yO-yE-U1N" secondAttribute="height" multiplier="1:1" id="u1y-cn-aew"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="Xo8-VK-Aa4">
-                                                    <rect key="frame" x="189.5" y="11" width="82.5" height="22"/>
+                                                    <rect key="frame" x="190" y="11" width="82.5" height="21.5"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -106,6 +106,11 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" id="rCq-zu-xCM">
+                                <rect key="frame" x="198" y="497" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SELECT LOCATION" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KjU-Zz-qan">
                                 <rect key="frame" x="114" y="59" width="186" height="24"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
@@ -146,6 +151,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="rCq-zu-xCM" id="l6W-wu-0Ta"/>
                         <outlet property="backgroundImageView" destination="0Kk-bg-Ob8" id="nVF-Fj-eTK"/>
                         <outlet property="blurEffectView" destination="x63-p7-08A" id="SQe-Ju-rwX"/>
                         <outlet property="cityPickerView" destination="rCh-4r-sAu" id="yRE-zT-Cmq"/>
@@ -155,7 +161,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aou-iQ-xMM" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="306" y="93"/>
+            <point key="canvasLocation" x="305.79710144927537" y="92.410714285714278"/>
         </scene>
     </scenes>
     <resources>

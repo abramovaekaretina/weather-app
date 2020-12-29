@@ -15,7 +15,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var getWeatherForecastButton: UIButton!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var blurEffectView: UIVisualEffectView!
-
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     private let startUrl = "https://api.weatherbit.io/v2.0/forecast/daily?city="
     private let apiKey = "&key=46bd1a25044d4418bfe508574356cc63"
     private var countOfDays = 3
@@ -86,9 +87,15 @@ class ViewController: UIViewController {
     }
 
     func sendRequest() {
+        activityIndicator.alpha = 1
+        activityIndicator.startAnimating()
         if let url = URL(string: apiURL) {
                 let urlRequest = URLRequest(url: url)
                 let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, _, error) in
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.alpha = 0
+                    }
                     guard error == nil else {
                         print(error?.localizedDescription ?? "Error not found")
                         return
@@ -142,6 +149,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                                                        for: indexPath) as? ForecastTableViewCell else {
             return UITableViewCell()
         }
+
         if let forecasts = forecasts {
             DispatchQueue.main.async {
                 cell.descriptionLabel.text = forecasts.data[indexPath.row].weather.description
