@@ -31,20 +31,3 @@ class Weather: Codable {
     let icon: String
     let description: String
 }
-
-//{
-//    "data":[{
-//        "valid_date":"2020-12-09"
-//        "weather":{
-//            "icon":"c04d",
-//            "code":804,
-//            "description":"Overcast clouds"
-//        },
-//        "datetime":"2020-12-09",
-//        "temp":3.7
-//
-//    },..],
-//    "city_name":"Brussels",
-//    "lon":"4.34878",
-//    "lat":"50.85045"
-//}

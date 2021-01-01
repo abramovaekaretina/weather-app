@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var blurEffectView: UIVisualEffectView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
+
     private let startUrl = "https://api.weatherbit.io/v2.0/forecast/daily?city="
     private let apiKey = "&key=46bd1a25044d4418bfe508574356cc63"
     private var countOfDays = 3
@@ -37,12 +37,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         blurEffectView.alpha = 0.7
+
         cityPickerView.delegate = self
         cityPickerView.dataSource = self
-        tableView.layer.cornerRadius = 15
+
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.layer.cornerRadius = 15
         getWeatherForecastButton.layer.cornerRadius = 15
+
         locationManager.requestWhenInUseAuthorization()
         locationManager.delegate = self
         currentLocation = locationManager.location ?? CLLocation()
@@ -97,7 +100,7 @@ class ViewController: UIViewController {
                         self.activityIndicator.alpha = 0
                     }
                     guard error == nil else {
-                        print(error?.localizedDescription ?? "Error not found")
+                        print(error?.localizedDescription ?? "Error: not found")
                         return
                     }
                     if let data = data {
@@ -107,7 +110,7 @@ class ViewController: UIViewController {
                                 self.tableView.reloadData()
                             }
                         } else {
-                            print("dgfbhjk")
+                            print("error")
                         }
                     }
                 }
