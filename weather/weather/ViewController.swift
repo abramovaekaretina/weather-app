@@ -19,10 +19,10 @@ class ViewController: UIViewController {
 
     private let startUrl = "https://api.weatherbit.io/v2.0/forecast/daily?city="
     private let apiKey = "&key=46bd1a25044d4418bfe508574356cc63"
+    private let viewModel = ViewModel()
     private var countOfDays = 3
     private var apiURL: String = ""
     private var selectedCity: String = ""
-    private var forecasts: ForecastDaily?
     private let locationManager = CLLocationManager()
     private var currentLocation = CLLocation()
     private var cities: [String] = [
@@ -45,6 +45,9 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.layer.cornerRadius = 15
         getWeatherForecastButton.layer.cornerRadius = 15
+
+        activityIndicator.alpha = 1
+        activityIndicator.startAnimating()
 
         locationManager.requestWhenInUseAuthorization()
         locationManager.delegate = self
@@ -75,7 +78,6 @@ class ViewController: UIViewController {
     }
 
     func getForecast() {
-        print("count - \(countOfDays)")
         if cityPickerView.selectedRow(inComponent: 0) != 0 {
             selectedCity = cities[cityPickerView.selectedRow(inComponent: 0)]
             apiURL = startUrl + selectedCity + apiKey + "&days=\(countOfDays)"
@@ -90,32 +92,19 @@ class ViewController: UIViewController {
     }
 
     func sendRequest() {
-        activityIndicator.alpha = 1
-        activityIndicator.startAnimating()
-        if let url = URL(string: apiURL) {
-                let urlRequest = URLRequest(url: url)
-                let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, _, error) in
-                    DispatchQueue.main.async {
-                        self.activityIndicator.stopAnimating()
-                        self.activityIndicator.alpha = 0
-                    }
-                    guard error == nil else {
-                        print(error?.localizedDescription ?? "Error: not found")
-                        return
-                    }
-                    if let data = data {
-                        if let forecastResponse = try? JSONDecoder().decode(ForecastDaily.self, from: data) {
-                            self.forecasts = forecastResponse
-                            DispatchQueue.main.async {
-                                self.tableView.reloadData()
-                            }
-                        } else {
-                            print("error")
-                        }
-                    }
+        viewModel.forecastDaily.bind { (forecast) in
+            DispatchQueue.main.async {
+                if forecast != nil {
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicator.isHidden = true
+                    self.tableView.reloadData()
+                } else {
+                    self.activityIndicator.startAnimating()
+                    self.activityIndicator.isHidden = false
                 }
-            dataTask.resume()
+            }
         }
+        viewModel.fetchForecast(url: apiURL)
     }
 }
 
@@ -140,7 +129,7 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let count = forecasts?.data.count else {
+        guard let count = viewModel.forecastDaily.value?.data.count else {
             return 0
         }
         return count
@@ -153,16 +142,18 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
 
-        if let forecasts = forecasts {
-            DispatchQueue.main.async {
-                cell.descriptionLabel.text = forecasts.data[indexPath.row].weather.description
-                let imageName = forecasts.data[indexPath.row].weather.icon
+        DispatchQueue.main.async {
+            let forecasts = self.viewModel.forecastDaily.value
+            cell.descriptionLabel.text = forecasts?.data[indexPath.row].weather.description
+            if let imageName = forecasts?.data[indexPath.row].weather.icon {
                 cell.weatherImageView.image = UIImage(named: imageName)
-                let degrees = forecasts.data[indexPath.row].temperature
+            }
+            if let degrees = forecasts?.data[indexPath.row].temperature {
                 cell.degreesLabel.text = "\(String(degrees))°C"
-                let dateFormetter = DateFormatter()
-                dateFormetter.dateFormat = "yyyy-MM-dd"
-                let string = forecasts.data[indexPath.row].date
+            }
+            let dateFormetter = DateFormatter()
+            dateFormetter.dateFormat = "yyyy-MM-dd"
+            if let string = forecasts?.data[indexPath.row].date {
                 if let date = dateFormetter.date(from: string) {
                     dateFormetter.dateFormat = "MMM d"
                     cell.dateLabel.text = dateFormetter.string(from: date)
