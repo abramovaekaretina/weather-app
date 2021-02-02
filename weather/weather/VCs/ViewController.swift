@@ -10,6 +10,8 @@ import CoreLocation
 
 class ViewController: UIViewController {
 
+    // MARK: - IBOutlets
+
     @IBOutlet weak var cityPickerView: UIPickerView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var getWeatherForecastButton: UIButton!
@@ -17,13 +19,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var blurEffectView: UIVisualEffectView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
-    private let startUrl = "https://api.weatherbit.io/v2.0/forecast/daily?city="
-    private let apiKey = "&key=46bd1a25044d4418bfe508574356cc63"
-    private let viewModel = ViewModel()
+    // MARK: - Private properties
+
     private var countOfDays = 3
     private var apiURL: String = ""
     private var selectedCity: String = ""
-    private let locationManager = CLLocationManager()
     private var currentLocation = CLLocation()
     private var cities: [String] = [
         "Current location", "Vienna", "Brussels",
@@ -33,10 +33,17 @@ class ViewController: UIViewController {
         "Kiev", "Helsinki", "Paris", "Prague",
         "Bern", "Stockholm", "Tallinn"
     ]
+    private let startUrl = "https://api.weatherbit.io/v2.0/forecast/daily?city="
+    private let apiKey = "&key=46bd1a25044d4418bfe508574356cc63"
+    private let viewModel = ViewModel()
+    private let locationManager = CLLocationManager()
+
+    // MARK: - Lifecycle functions
 
     override func viewDidLoad() {
         super.viewDidLoad()
         blurEffectView.alpha = 0.7
+        navigationController?.navigationBar.isHidden = true
 
         cityPickerView.delegate = self
         cityPickerView.dataSource = self
@@ -60,6 +67,8 @@ class ViewController: UIViewController {
         getForecast()
     }
 
+    // MARK: - IBActions
+
     @IBAction func getWeatherForecastButtonPressed(_ sender: Any) {
         let alert = UIAlertController(title: "Select count of days", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "3 days", style: .default, handler: { (_) in
@@ -76,6 +85,8 @@ class ViewController: UIViewController {
         }))
         present(alert, animated: true)
     }
+
+    // MARK: - Flow functions
 
     func getForecast() {
         if cityPickerView.selectedRow(inComponent: 0) != 0 {
@@ -108,6 +119,8 @@ class ViewController: UIViewController {
     }
 }
 
+// MARK: - Extension UIPickerView
+
 extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -126,6 +139,8 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
 }
+
+// MARK: - Extension UITableView
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -166,10 +181,24 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let nameController = String(describing: DailyForestViewController.self)
+        let viewController = storyboard.instantiateViewController(identifier: nameController) as DailyForestViewController
+        viewController.modalPresentationStyle = .fullScreen
+        viewController.forecast = viewModel.forecastDaily.value
+        viewController.index = indexPath.row
+        navigationController?.pushViewController(viewController, animated: true)
+
+    }
 }
 
+// MARK: - Extension CLLocationManager
+
 extension ViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager,
+                         didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             currentLocation = location
             tableView.reloadData()
