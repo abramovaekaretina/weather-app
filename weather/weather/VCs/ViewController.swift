@@ -190,6 +190,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         viewController.modalPresentationStyle = .fullScreen
         viewController.forecast = viewModel.forecastDaily.value
         viewController.index = indexPath.row
+        viewController.totalDays = countOfDays
         navigationController?.pushViewController(viewController, animated: true)
 
     }
