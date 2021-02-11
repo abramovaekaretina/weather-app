@@ -8,7 +8,6 @@
 import Foundation
 
 class ViewModel {
-
     private let api = APIManager()
 
     let forecastDaily: Observable<ForecastDaily?> = Observable(nil)

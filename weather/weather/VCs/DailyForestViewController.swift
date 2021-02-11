@@ -30,7 +30,7 @@ class DailyForestViewController: UIViewController {
 
     // MARK: - Private properties
 
-    private let viewModel = ViewModel()
+//    private let viewModel = ViewModel()
 
     // MARK: - Lifecycle functions
 

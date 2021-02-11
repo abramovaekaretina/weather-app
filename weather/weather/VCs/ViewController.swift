@@ -34,6 +34,7 @@ class ViewController: UIViewController {
         "Bern", "Stockholm", "Tallinn"
     ]
     private let startUrl = "https://api.weatherbit.io/v2.0/forecast/daily?city="
+    
     private let apiKey = "&key=46bd1a25044d4418bfe508574356cc63"
     private let viewModel = ViewModel()
     private let locationManager = CLLocationManager()
