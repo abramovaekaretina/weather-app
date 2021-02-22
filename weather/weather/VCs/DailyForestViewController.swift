@@ -24,6 +24,8 @@ class DailyForestViewController: UIViewController {
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var nextForecastButton: UIButton!
     @IBOutlet weak var previousForecastButton: UIButton!
+    let activeButtonAlpha: CGFloat = 0.8
+    let inactiveButtonAlpha: CGFloat = 0.4
 
     // MARK: - Public properties
 
@@ -37,8 +39,8 @@ class DailyForestViewController: UIViewController {
         super.viewDidLoad()
         backButton.layer.cornerRadius = 15
         blurEffect.alpha = 0.5
-        previousForecastButton.alpha = 0.8
-        nextForecastButton.alpha = 0.8
+        previousForecastButton.alpha = activeButtonAlpha
+        nextForecastButton.alpha = activeButtonAlpha
         showForecast(for: index)
 
         let swipeGesture = UISwipeGestureRecognizer()
@@ -57,14 +59,14 @@ class DailyForestViewController: UIViewController {
     @IBAction func showPreviousForecastButtonPressed(_ sender: Any) {
         index -= 1
         if index == 0 {
-            nextForecastButton.alpha = 0.8
-            previousForecastButton.alpha = 0.4
+            nextForecastButton.alpha = activeButtonAlpha
+            previousForecastButton.alpha = inactiveButtonAlpha
         } else if index == totalDays - 1 {
-            nextForecastButton.alpha = 0.4
-            previousForecastButton.alpha = 0.8
+            nextForecastButton.alpha = inactiveButtonAlpha
+            previousForecastButton.alpha = activeButtonAlpha
         } else if (index > 0) && (index < totalDays - 1) {
-            nextForecastButton.alpha = 0.8
-            previousForecastButton.alpha = 0.8
+            nextForecastButton.alpha = activeButtonAlpha
+            previousForecastButton.alpha = activeButtonAlpha
         }
         showForecast(for: index)
     }
@@ -72,14 +74,14 @@ class DailyForestViewController: UIViewController {
     @IBAction func showNextForecastButtonPressed(_ sender: Any) {
         index += 1
         if index == totalDays - 1 {
-            nextForecastButton.alpha = 0.4
-            previousForecastButton.alpha = 0.8
+            nextForecastButton.alpha = inactiveButtonAlpha
+            previousForecastButton.alpha = activeButtonAlpha
         } else if index == 0 {
-            nextForecastButton.alpha = 0.8
-            previousForecastButton.alpha = 0.4
+            nextForecastButton.alpha = activeButtonAlpha
+            previousForecastButton.alpha = inactiveButtonAlpha
         } else if (index > 0) && (index < totalDays - 1) {
-            nextForecastButton.alpha = 0.8
-            previousForecastButton.alpha = 0.8
+            nextForecastButton.alpha = activeButtonAlpha
+            previousForecastButton.alpha = activeButtonAlpha
         }
         showForecast(for: index)
     }
